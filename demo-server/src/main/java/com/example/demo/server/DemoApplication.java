@@ -3,13 +3,13 @@ package com.example.demo.server;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(
 		scanBasePackages = "com.example.demo"
 )
-@MapperScan(basePackages = "com.example.demo.dal.mapper")
-
+@MapperScan(basePackages = {"com.example.demo.dal.mapper","generator"})
 @EnableTransactionManagement(proxyTargetClass = true)
 public class DemoApplication {
 

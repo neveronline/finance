@@ -3,8 +3,10 @@ package com.example.demo.dal.mapper;
 import com.example.demo.dal.bean.Bucket;
 import com.example.demo.dal.bean.BucketExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+@Mapper
 public interface BucketDao {
     long countByExample(BucketExample example);
 

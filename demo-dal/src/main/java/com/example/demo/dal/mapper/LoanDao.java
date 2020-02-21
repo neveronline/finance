@@ -3,8 +3,10 @@ package com.example.demo.dal.mapper;
 import com.example.demo.dal.bean.Loan;
 import com.example.demo.dal.bean.LoanExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+@Mapper
 public interface LoanDao {
     long countByExample(LoanExample example);
 

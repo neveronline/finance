@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class EntryVO {
-    private Integer bucketId;
+    private String bucketId;
     private Double value;
 }

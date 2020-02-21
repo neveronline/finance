@@ -37,7 +37,7 @@ public class LedgerServiceImpl implements LedgerService {
         Bucket bucket = new Bucket();
         bucket.setName(request.getIdentifier());
         bucket.setLoanId(request.getLoanId());
-        int result = bucketDao.insert(bucket);
+        int result = bucketDao.insertSelective(bucket);
         return result > 0;
     }
 
@@ -63,7 +63,7 @@ public class LedgerServiceImpl implements LedgerService {
         for(Entry entry : entries) {
             EntryResponseVO responseVO= new EntryResponseVO();
             responseVO.setValue(DoubleUtils.convertMoney(entry.getValue()));
-            responseVO.setBucketId(entry.getBucketId());
+            responseVO.setBucketId(bucketDao.selectByPrimaryKey(entry.getBucketId()).getName());
             responseVO.setCreatedAt(DateUtils.formatter(entry.getCreatTime(), DateUtils.HOUR_PATTERN));
             responseVO.setEffectiveDate(DateUtils.formatter(entry.getEffectiveTime(), DateUtils.pattern));
             result.add(responseVO);
@@ -79,7 +79,8 @@ public class LedgerServiceImpl implements LedgerService {
         List<Entry> entries = new ArrayList<>();
         for(EntryVO entryVO : request.getEntries()) {
             Entry entry = new Entry();
-            entry.setBucketId(entryVO.getBucketId());
+
+            entry.setBucketId(getBucketByName(entryVO.getBucketId(), request.getLoanId()).getId());
             entry.setLoadId(request.getLoanId().longValue());
             entry.setValue(DoubleUtils.convertMoney(entryVO.getValue()));
             entry.setCreatTime(new Date());
@@ -88,7 +89,7 @@ public class LedgerServiceImpl implements LedgerService {
         if(processEntries(entries)) {
             for(Entry entry : entries) {
                 entry.setEffectiveTime(new Date());
-                entryDao.insert(entry);
+                entryDao.insertSelective(entry);
             }
         }
         return true;
@@ -107,5 +108,16 @@ public class LedgerServiceImpl implements LedgerService {
             }
         }
         return true;
+    }
+
+    private Bucket getBucketByName(String name, Integer loanId) {
+        BucketExample example = new BucketExample();
+        example.createCriteria().andNameEqualTo(name).andLoanIdEqualTo(loanId);
+        List<Bucket> buckets = bucketDao.selectByExample(example);
+
+        if(CollectionUtils.isEmpty(buckets)) {
+            return null;
+        }
+        return buckets.get(0);
     }
 }
