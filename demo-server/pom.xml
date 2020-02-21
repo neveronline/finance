@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>demo</artifactId>
+        <groupId>com.example</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>demo-server</artifactId>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <conf-dir>dev</conf-dir>
+                <doc-enable>false</doc-enable>
+                <skip-test>true</skip-test>
+                <java-compile-version>1.8</java-compile-version>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <conf-dir>test</conf-dir>
+                <doc-enable>true</doc-enable>
+                <skip-test>false</skip-test>
+                <java-compile-version>1.8</java-compile-version>
+                <surefire-test-argLine>-XX:MaxPermSize=256m -XX:PermSize=256m</surefire-test-argLine>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <conf-dir>prod</conf-dir>
+                <doc-enable>false</doc-enable>
+                <skip-test>true</skip-test>
+                <java-compile-version>1.8</java-compile-version>
+            </properties>
+        </profile>
+    </profiles>
+    <build>
+        <finalName>${project.parent.artifactId}-release-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/profile/${conf-dir}</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>demo-dal</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+</project>
